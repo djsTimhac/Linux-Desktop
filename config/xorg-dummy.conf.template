@@ -1,0 +1,29 @@
+# Linux-Desktop: Xorg-Konfiguration (Dummy-Treiber, deterministisch, ohne GPU)
+# Generiert von setup.sh — bitte nicht manuell editieren.
+
+Section "ServerFlags"
+    Option "DontVTSwitch" "true"
+EndSection
+
+Section "Device"
+    Identifier "LDDummyDevice"
+    Driver "dummy"
+    Option "ConstantDPI" "true"
+EndSection
+
+Section "Monitor"
+    Identifier "LDMonitor"
+    HorizSync   28.0-80.0
+    VertRefresh 48.0-75.0
+EndSection
+
+Section "Screen"
+    Identifier "LDXScreen"
+    Device     "LDDummyDevice"
+    Monitor    "LDMonitor"
+    DefaultDepth 24
+    SubSection "Display"
+        Depth 24
+        Modes "@WIDTH@x@HEIGHT@"
+    EndSubSection
+EndSection

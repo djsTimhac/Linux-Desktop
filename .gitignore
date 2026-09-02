@@ -1,0 +1,4 @@
+*.log
+*.deb
+*.tmp
+.DS_Store

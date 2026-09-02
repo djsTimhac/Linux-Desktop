@@ -1,0 +1,33 @@
+# =============================================================================
+# Lightning AI — Konfiguration für dieses Repo (best-effort)
+#
+# Führt das Linux-Desktop auf einer Lightning-VM/Studio-Instanz aus:
+#   • setup.sh    : einmalige Provisionierung (Debian-Stable-Pakete, RustDesk,
+#                  LXQt, X11, noVNC)
+#   • start.sh    : startet alle Dienste + gibt Zugangsdaten aus
+#
+# Falls dein Lightning-Flow lightning.yaml nicht automatisch einliest,
+# genügt im Studio-Terminal:
+#     git pull && sudo bash setup.sh && sudo bash start.sh
+# =============================================================================
+name: linux-desktop
+description: "Debian LXQt X11 Desktop — RustDesk (self-hosted) + noVNC Browser-Zugriff, 100% Open Source"
+
+base_image: debian:13
+
+setup_commands:
+  - bash setup.sh
+
+startup_commands:
+  - bash start.sh
+
+# Öffentlich benötigte Ports:
+#   80     → noVNC im Browser
+#   21115  → hbbs (NAT-Type-Test, tcp)
+#   21116  → hbbs (ID/Heartbeat, tcp+udp)
+#   21117  → hbbr (Relay, tcp)
+ports:
+  - 80
+  - 21115
+  - 21116
+  - 21117

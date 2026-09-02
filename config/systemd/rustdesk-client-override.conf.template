@@ -1,0 +1,10 @@
+# Linux-Desktop: Override für das RustDesk-Client-Service (root, mit X-Zugriff)
+# Das Standard-Service läuft als root; wir geben ihm DISPLAY + XAUTHORITY des
+# Desktop-Users, damit die X11-Screen-Sharing-Aufnahme funktioniert.
+[Service]
+After=lightdm.service
+# Warten, bis der X-Server :0 existiert; X-Cookie sicherstellen (Fallback:
+# aus dem Xorg-Prozess-Environment uebernehmen).
+ExecStartPre=/bin/sh -c 'i=0; while [ ! -e /tmp/.X11-unix/X0 ] && [ "$i" -lt 120 ]; do sleep 1; i=$((i+1)); done; [ -e /tmp/.X11-unix/X0 ] || exit 1; AUTH=/home/@USER@/.Xauthority; if [ ! -s "$AUTH" ]; then XPID=$(pgrep -x Xorg | head -1); if [ -n "$XPID" ]; then XAUTH=$(tr "\\0" "\\n" < /proc/$XPID/environ 2>/dev/null | sed -n "s/^XAUTHORITY=//p" | head -1); [ -n "$XAUTH" ] && [ -s "$XAUTH" ] && cp "$XAUTH" "$AUTH"; fi; fi; exit 0'
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/@USER@/.Xauthority
