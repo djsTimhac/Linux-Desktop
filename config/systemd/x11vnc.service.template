@@ -1,0 +1,20 @@
+[Unit]
+Description=x11vnc VNC-Server (Linux-Desktop)
+After=network.target lightdm.service
+Wants=lightdm.service
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/@USER@/.Xauthority
+# Warten, bis LightDM/LXQt den X-Server :0 gestartet hat; dann X-Cookie in
+# /home/@USER@/.Xauthority sicherstellen (LightDM legt ihn über pam_xauth ab,
+# Fallback: aus dem Xorg-Prozess-Environment uebernehmen).
+ExecStartPre=/bin/sh -c 'i=0; while [ ! -e /tmp/.X11-unix/X0 ] && [ "$i" -lt 120 ]; do sleep 1; i=$((i+1)); done; [ -e /tmp/.X11-unix/X0 ] || exit 1; AUTH=/home/@USER@/.Xauthority; if [ ! -s "$AUTH" ]; then XPID=$(pgrep -x Xorg | head -1); if [ -n "$XPID" ]; then XAUTH=$(tr "\\0" "\\n" < /proc/$XPID/environ 2>/dev/null | sed -n "s/^XAUTHORITY=//p" | head -1); [ -n "$XAUTH" ] && [ -s "$XAUTH" ] && cp "$XAUTH" "$AUTH" && chown @USER@:@USER@ "$AUTH"; fi; fi; exit 0'
+ExecStart=/usr/bin/x11vnc -display :0 -forever -shared -ncache 10 @VNC_LISTEN_OPT@ @VNC_AUTH_OPT@
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

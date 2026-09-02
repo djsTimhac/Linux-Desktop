@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=RustDesk
+Comment=RustDesk Tray (self-hosted Server)
+Exec=env DISPLAY=:0 rustdesk --tray
+Terminal=false
+X-GNOME-Autostart-enabled=true

@@ -1,0 +1,13 @@
+[Unit]
+Description=websockify WebSocket-Proxy für noVNC
+After=network.target
+
+[Service]
+# noVNC-Static-Files liefert nginx (Port 80); websockify läuft nur auf
+# Loopback und brückt die WebSocket-Verbindung zu x11vnc auf Port 5900.
+ExecStart=/usr/bin/websockify --web=/usr/share/novnc 127.0.0.1:6080 127.0.0.1:5900
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

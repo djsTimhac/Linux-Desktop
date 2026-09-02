@@ -1,0 +1,5 @@
+# Linux-Desktop: LightDM Autologin (generiert von setup.sh)
+[Seat:*]
+autologin-user=@USER@
+autologin-user-timeout=0
+user-session=lxqt
